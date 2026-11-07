@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAK Electronics & Automotives</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for drawer and modals */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-slate-900 text-slate-200 text-xs py-2 px-4 text-center flex justify-between items-center sm:px-8">
+        <span><i class="fa-solid fa-truck-fast text-sky-400 mr-2"></i> Free Delivery Nationwide on Orders Above  PKR 50,000!</span>
+        <div class="hidden sm:flex gap-4 text-xs">
+            <span class="cursor-pointer hover:text-sky-400"><i class="fa-solid fa-phone mr-1"></i> +92 300 1234567</span>
+            <span class="cursor-pointer hover:text-sky-400"><i class="fa-solid fa-globe mr-1"></i> Global Warranty</span>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-30 bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-18 py-3 gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="filterCategory('All')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-sky-200">
+                        PAK
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-tight text-slate-900">PAK<span class="text-sky-600">.</span></span>
+                        <span class="block text-[10px] uppercase font-bold tracking-widest text-slate-400 -mt-1">Mega Store</span>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-xl mx-4 hidden md:block">
+                    <div class="relative">
+                        <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search mobiles, laptops, cars, parts, appliances..." 
+                               class="w-full pl-10 pr-4 py-2.5 bg-slate-100 text-slate-800 rounded-xl border border-transparent focus:border-sky-500 focus:bg-white focus:outline-none transition-all text-sm">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                    </div>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex items-center gap-4">
+                    <!-- Wishlist Button Counter -->
+                    <button class="relative p-2.5 text-slate-600 hover:text-sky-600 hover:bg-slate-100 rounded-xl transition" title="Wishlist">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                        <span id="wishlistCount" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Cart Button Drawer Toggle -->
+                    <button onclick="toggleCartDrawer()" class="relative p-2.5 bg-sky-50 text-sky-600 hover:bg-sky-100 rounded-xl transition font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span class="hidden sm:inline text-xs font-bold">Cart</span>
+                        <span id="cartCount" class="bg-sky-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar -->
+            <div class="block md:hidden pb-3">
+                <div class="relative">
+                    <input type="text" id="mobileSearchInput" onkeyup="handleSearch()" placeholder="Search products..." 
+                           class="w-full pl-10 pr-4 py-2 bg-slate-100 text-slate-800 rounded-xl text-sm focus:outline-none">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Nav Pills -->
+        <nav class="bg-slate-100 border-t border-slate-200 overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 py-2 overflow-x-auto scrollbar-none whitespace-nowrap" id="categoryNav">
+                <!-- Injected Dynamically -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Promo Banner -->
+        <div class="relative rounded-3xl bg-gradient-to-r from-slate-900 via-sky-900 to-indigo-900 text-white p-6 sm:p-10 mb-8 overflow-hidden shadow-xl">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-[200px] font-black select-none pointer-events-none">
+                PAK
+            </div>
+            <div class="relative z-10 max-w-xl">
+                <span class="inline-block px-3 py-1 bg-sky-500/30 text-sky-300 rounded-full text-xs font-semibold mb-3 border border-sky-400/30">
+                    Grand Official Store Launch
+                </span>
+                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 leading-tight">
+                    Next-Gen Tech, EVs & Precision Electric Components.
+                </h1>
+                <p class="text-slate-300 text-xs sm:text-sm mb-6">
+                    Shop genuine smartphones, flagship laptops, eco-friendly smart cars, smart washers & industrial electric parts with direct manufacturer warranty.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="filterCategory('Mobile Phones')" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-xs rounded-xl shadow-lg shadow-sky-500/30 transition">
+                        Explore Mobiles
+                    </button>
+                    <button onclick="filterCategory('Cars')" class="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl backdrop-blur-sm border border-white/20 transition">
+                        View EV Cars
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Header Row -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 id="currentCategoryTitle" class="text-xl font-bold text-slate-900">All Products</h2>
+                <p id="productCountText" class="text-xs text-slate-500">Showing all items</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <label for="sortBy" class="text-xs text-slate-500 font-medium">Sort by:</label>
+                <select id="sortBy" onchange="applySorting()" class="bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:border-sky-500 shadow-sm">
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamic Product Cards will be rendered here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16">
+            <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
+            <h3 class="text-lg font-semibold text-slate-700">No products found</h3>
+            <p class="text-xs text-slate-500">Try adjusting your search query or filter category.</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold text-sm">PAK</div>
+                        <span class="text-lg font-bold text-white">PAK Store</span>
+                    </div>
+                    <p class="text-slate-400 mb-4 leading-relaxed">Your ultimate destination for premier tech, modern luxury vehicles, home appliances, and certified electrical component supplies.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 text-sm">Product Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" onclick="filterCategory('Mobile Phones'); return false;" class="hover:text-white">Smartphones & Tablets</a></li>
+                        <li><a href="#" onclick="filterCategory('Laptops'); return false;" class="hover:text-white">High Performance Laptops</a></li>
+                        <li><a href="#" onclick="filterCategory('Washing Machines'); return false;" class="hover:text-white">Smart Washing Machines</a></li>
+                        <li><a href="#" onclick="filterCategory('Cars'); return false;" class="hover:text-white">Electric & Hybrid Cars</a></li>
+                        <li><a href="#" onclick="filterCategory('Electrical Parts'); return false;" class="hover:text-white">Industrial Electrical Parts</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 text-sm">Customer Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white">Order Tracking</a></li>
+                        <li><a href="#" class="hover:text-white">Warranty & Return Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Shipping & Delivery</a></li>
+                        <li><a href="#" class="hover:text-white">Installment Plans</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 text-sm">Newsletter</h4>
+                    <p class="mb-3">Subscribe to get special discounts and early access to new EV and laptop drops.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Enter your email" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs w-full focus:outline-none focus:border-sky-500">
+                        <button class="bg-sky-600 hover:bg-sky-500 text-white font-semibold px-4 py-2 rounded-lg text-xs">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-slate-500">
+                <p>&copy; 2026 PAK Electronics & Automotives. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0 text-base">
+                    <i class="fa-brands fa-facebook hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-twitter hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-instagram hover:text-white cursor-pointer"></i>
+                    <i class="fa-brands fa-youtube hover:text-white cursor-pointer"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Slide-over Drawer -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
+        <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <!-- Header -->
+                <div class="p-4 sm:p-6 bg-slate-900 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-sky-400"></i>
+                        <h2 class="text-lg font-bold">Your Cart</h2>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white p-1">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items Scrollable List -->
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4" id="cartItemsContainer">
+                    <!-- Dynamic Cart Items Injected Here -->
+                </div>
+
+                <!-- Footer Summary -->
+                <div class="p-4 sm:p-6 border-t border-slate-200 bg-slate-50 space-y-3">
+                    <div class="flex justify-between text-xs text-slate-600">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal">PKR 0</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-600">
+                        <span>Estimated Shipping</span>
+                        <span id="cartShipping">FREE</span>
+                    </div>
+                    <div class="flex justify-between text-base font-bold text-slate-900 pt-2 border-t border-slate-200">
+                        <span>Total</span>
+                        <span id="cartTotal" class="text-sky-600">PKR 0</span>
+                    </div>
+                    <button id="checkoutBtn" onclick="openCheckout()" class="w-full py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-sky-600/30 transition flex items-center justify-center gap-2">
+                        <span>Proceed to Checkout</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeProductModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="relative bg-white p-6 sm:p-8" id="productModalContent">
+                    <!-- Injected Dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeCheckout()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
+                    <h3 class="font-bold text-lg"><i class="fa-solid fa-shield-halved text-sky-400 mr-2"></i>Checkout Order</h3>
+                    <button onclick="closeCheckout()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                <form id="checkoutForm" onsubmit="handlePlaceOrder(event)" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-sky-500" placeholder="Ali Khan">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Email</label>
+                            <input type="email" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-sky-500" placeholder="ali@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Phone</label>
+                            <input type="tel" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-sky-500" placeholder="0300 1234567">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Delivery Address</label>
+                        <textarea required rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-sky-500" placeholder="House #, Street, City"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Payment Method</label>
+                        <select class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-sky-500">
+                            <option>Cash on Delivery (COD)</option>
+                            <option>Debit / Credit Card</option>
+                            <option>Bank Wire Transfer</option>
+                            <option>PAK Wallet / EasyPaisa / JazzCash</option>
+                        </select>
+                    </div>
+                    <div class="pt-4 border-t border-slate-200">
+                        <div class="flex justify-between font-bold text-slate-900 mb-4">
+                            <span>Total Payable:</span>
+                            <span id="checkoutTotalAmount" class="text-sky-600">PKR 0</span>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-lg transition">
+                            Confirm Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMsg" class="text-xs font-medium">Notification message</span>
+    </div>
+
+    <!-- JavaScript Data and Application Logic -->
+    <script>
+        // Store Categories Data
+        const categories = [
+            { name: 'All', icon: 'fa-layer-group' },
+            { name: 'Mobile Phones', icon: 'fa-mobile-screen-button' },
+            { name: 'Laptops', icon: 'fa-laptop' },
+            { name: 'Washing Machines', icon: 'fa-soap' },
+            { name: 'Cars', icon: 'fa-car' },
+            { name: 'Electrical Parts', icon: 'fa-bolt' }
+        ];
+
+        // Store Products Master Array
+        const products = [
+            {
+                id: 1,
+                name: 'PAK Ultra Smartphone Pro Max 5G',
+                category: 'Mobile Phones',
+                pricePKR: 285000,
+                priceUSD: 1020,
+                rating: 4.9,
+                reviews: 124,
+                stock: 15,
+                image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop',
+                description: 'Flagship 6.8-inch AMOLED 120Hz display, 200MP Quad Camera System, 512GB Storage, Snapdragon 8 Gen 3 chipset and 5000mAh Battery with 120W HyperCharge.',
+                badge: 'Best Seller'
+            },
+            {
+                id: 2,
+                name: 'PAK Speedster EV Electric Sedan (2026)',
+                category: 'Cars',
+                pricePKR: 12500000,
+                priceUSD: 45000,
+                rating: 4.95,
+                reviews: 42,
+                stock: 3,
+                image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&auto=format&fit=crop',
+                description: 'Full Electric Autonomous Smart Vehicle with 650km Range per charge, Dual Motor AWD, 0-100 km/h in 3.2 seconds, panoramic glass roof, and AI Copilot.',
+                badge: 'EV Special'
+            },
+            {
+                id: 3,
+                name: 'PAK WorkStation Pro Laptop 16"',
+                category: 'Laptops',
+                pricePKR: 420000,
+                priceUSD: 1500,
+                rating: 4.8,
+                reviews: 89,
+                stock: 8,
+                image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop',
+                description: 'Designed for engineers and creators. Intel Core i9 14th Gen, 64GB DDR5 RAM, 2TB NVMe SSD, NVIDIA RTX 4080 graphics, 4K OLED HDR display.',
+                badge: 'Top Rated'
+            },
+            {
+                id: 4,
+                name: 'PAK Smart Washer & Dryer 12KG Direct Drive',
+                category: 'Washing Machines',
+                pricePKR: 165000,
+                priceUSD: 590,
+                rating: 4.7,
+                reviews: 56,
+                stock: 12,
+                image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=600&auto=format&fit=crop',
+                description: 'Inverter Direct Drive Motor, Steam Hygiene Wash, Built-in Wi-Fi Smart Control, Eco-Bubble Technology and ultra-quiet silent operation.',
+                badge: 'Energy Saver'
+            },
+            {
+                id: 5,
+                name: 'High Performance Industrial Circuit Breaker 100A',
+                category: 'Electrical Parts',
+                pricePKR: 14500,
+                priceUSD: 52,
+                rating: 4.9,
+                reviews: 210,
+                stock: 100,
+                image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop',
+                description: 'Heavy duty 3-Phase thermal magnetic circuit breaker for industrial safety compliance, flame retardant casing, short circuit protection.',
+                badge: 'Certified'
+            },
+            {
+                id: 6,
+                name: 'PAK Lite Phone 128GB - Midnight Black',
+                category: 'Mobile Phones',
+                pricePKR: 65000,
+                priceUSD: 233,
+                rating: 4.5,
+                reviews: 78,
+                stock: 25,
+                image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&auto=format&fit=crop',
+                description: 'Affordable performance with 50MP Dual Camera, 6.5-inch 90Hz display, 8GB RAM, 5000mAh long life battery.',
+                badge: 'Value Pick'
+            },
+            {
+                id: 7,
+                name: 'PAK Eco Hybrid Compact SUV',
+                category: 'Cars',
+                pricePKR: 8900000,
+                priceUSD: 31900,
+                rating: 4.88,
+                reviews: 31,
+                stock: 4,
+                image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop',
+                description: 'Hybrid SUV combining fuel efficiency and electric drive agility. Leather interiors, 360-degree camera, wireless charging and collision safety sensor system.',
+                badge: 'Popular'
+            },
+            {
+                id: 8,
+                name: 'PAK Slim Air Ultrabook 14"',
+                category: 'Laptops',
+                pricePKR: 210000,
+                priceUSD: 750,
+                rating: 4.6,
+                reviews: 94,
+                stock: 18,
+                image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop',
+                description: 'Ultra-thin lightweight aluminum chassis, AMD Ryzen 7 7800U, 16GB RAM, 512GB SSD, 18-hour battery life.',
+                badge: 'Ultra Portable'
+            },
+            {
+                id: 9,
+                name: 'Pure Copper Electrical Cable Spool (100m)',
+                category: 'Electrical Parts',
+                pricePKR: 28000,
+                priceUSD: 100,
+                rating: 4.95,
+                reviews: 310,
+                stock: 80,
+                image: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=600&auto=format&fit=crop',
+                description: '99.9% Pure oxygen-free copper electrical wire for residential and commercial wiring projects. Flame resistant dual insulation layer.',
+                badge: 'Standard'
+            },
+            {
+                id: 10,
+                name: 'PAK Automatic Top Load Washer 9KG',
+                category: 'Washing Machines',
+                pricePKR: 98000,
+                priceUSD: 350,
+                rating: 4.4,
+                reviews: 45,
+                stock: 14,
+                image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=600&auto=format&fit=crop',
+                description: 'Fuzzy logic automated wash programs, stainless steel diamond drum, soft-closing glass lid, low water consumption.',
+                badge: ''
+            },
+            {
+                id: 11,
+                name: 'Solar Inverter Pure Sine Wave 5KW',
+                category: 'Electrical Parts',
+                pricePKR: 195000,
+                priceUSD: 700,
+                rating: 4.9,
+                reviews: 142,
+                stock: 22,
+                image: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?w=600&auto=format&fit=crop',
+                description: 'High efficiency hybrid solar inverter with MPPT charger controller. Remote Bluetooth smartphone monitoring.',
+                badge: 'Solar Essential'
+            },
+            {
+                id: 12,
+                name: 'PAK Foldable OLED Dual-Screen Phone',
+                category: 'Mobile Phones',
+                pricePKR: 390000,
+                priceUSD: 1400,
+                rating: 4.7,
+                reviews: 29,
+                stock: 6,
+                image: 'https://images.unsplash.com/photo-1546054454-aa26e2b734c7?w=600&auto=format&fit=crop',
+                description: 'Futuristic foldable display phone. Dual screen flex mode, titanium hinge structure, triple camera lens with 100x zoom.',
+                badge: 'Innovation'
+            }
+        ];
+
+        // App State
+        let currentCategory = 'All';
+        let cart = [];
+        let wishlist = [];
+        let activeSort = 'featured';
+
+        // Format Currency Helper
+        function formatPKR(num) {
+            return 'PKR ' + num.toLocaleString('en-PK');
+        }
+
+        // Initialize App
+        window.onload = function() {
+            renderCategoryNav();
+            renderProducts();
+            updateCartUI();
+        };
+
+        // Render Category Filter Buttons
+        function renderCategoryNav() {
+            const container = document.getElementById('categoryNav');
+            container.innerHTML = categories.map(cat => {
+                const isActive = cat.name === currentCategory;
+                const activeClass = isActive 
+                    ? 'bg-sky-600 text-white font-semibold shadow-md shadow-sky-600/20' 
+                    : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200';
+                return `
+                    <button onclick="filterCategory('${cat.name}')" class="px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition-all ${activeClass}">
+                        <i class="fa-solid ${cat.icon}"></i>
+                        <span>${cat.name}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // Filter Category Trigger
+        function filterCategory(catName) {
+            currentCategory = catName;
+            document.getElementById('currentCategoryTitle').innerText = catName === 'All' ? 'All Products' : catName;
+            renderCategoryNav();
+            renderProducts();
+        }
+
+        // Get Filtered & Sorted Products
+        function getFilteredProducts() {
+            const searchVal = (document.getElementById('searchInput').value || document.getElementById('mobileSearchInput').value || '').toLowerCase().trim();
+            
+            return products.filter(p => {
+                const matchesCat = (currentCategory === 'All') || (p.category === currentCategory);
+                const matchesSearch = p.name.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal) || p.category.toLowerCase().includes(searchVal);
+                return matchesCat && matchesSearch;
+            }).sort((a, b) => {
+                if (activeSort === 'price-low') return a.pricePKR - b.pricePKR;
+                if (activeSort === 'price-high') return b.pricePKR - a.pricePKR;
+                if (activeSort === 'rating') return b.rating - a.rating;
+                return a.id - b.id; // default featured
+            });
+        }
+
+        // Render Product Cards
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const empty = document.getElementById('emptyState');
+            const filtered = getFilteredProducts();
+
+            document.getElementById('productCountText').innerText = `Showing ${filtered.length} item(s)`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(p => {
+                const isWishlisted = wishlist.includes(p.id);
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                        
+                        <!-- Image Container -->
+                        <div class="relative h-48 sm:h-52 bg-slate-100 overflow-hidden cursor-pointer" onclick="openProductModal(${p.id})">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                 onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=${encodeURIComponent(p.name)}'">
+                            
+                            ${p.badge ? `<span class="absolute top-3 left-3 bg-sky-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-md">${p.badge}</span>` : ''}
+
+                            <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-600 hover:text-rose-500 transition shadow">
+                                <i class="${isWishlisted ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart'}"></i>
+                            </button>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-[11px] font-bold text-sky-600 uppercase tracking-wider">${p.category}</span>
+                                <h3 class="font-bold text-slate-900 text-sm mt-1 line-clamp-1 group-hover:text-sky-600 transition cursor-pointer" onclick="openProductModal(${p.id})">
+                                    ${p.name}
+                                </h3>
+                                <p class="text-slate-500 text-xs mt-1 line-clamp-2 leading-relaxed">
+                                    ${p.description}
+                                </p>
+                            </div>
+
+                            <!-- Rating & Stock -->
+                            <div class="mt-4 pt-3 border-t border-slate-100">
+                                <div class="flex items-center justify-between text-xs mb-3">
+                                    <div class="flex items-center text-amber-500 gap-1 font-semibold">
+                                        <i class="fa-solid fa-star text-xs"></i>
+                                        <span>${p.rating}</span>
+                                        <span class="text-slate-400 font-normal">(${p.reviews})</span>
+                                    </div>
+                                    <span class="text-[11px] font-medium ${p.stock < 5 ? 'text-amber-600 bg-amber-50' : 'text-emerald-600 bg-emerald-50'} px-2 py-0.5 rounded">
+                                        ${p.stock} in stock
+                                    </span>
+                                </div>
+
+                                <!-- Price and Add Button -->
+                                <div class="flex items-center justify-between gap-2">
+                                    <div>
+                                        <div class="text-base font-extrabold text-slate-900 leading-none">${formatPKR(p.pricePKR)}</div>
+                                        <div class="text-[10px] text-slate-400 mt-0.5">~$${p.priceUSD.toLocaleString()} USD</div>
+                                    </div>
+                                    <button onclick="addToCart(${p.id})" class="px-3.5 py-2 bg-slate-900 hover:bg-sky-600 text-white rounded-xl text-xs font-semibold shadow-md transition-colors flex items-center gap-1.5">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                        <span>Add</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Live Search Handling
+        function handleSearch() {
+            renderProducts();
+        }
+
+        // Sorting Handling
+        function applySorting() {
+            activeSort = document.getElementById('sortBy').value;
+            renderProducts();
+        }
+
+        // Wishlist Toggle
+        function toggleWishlist(id) {
+            const index = wishlist.indexOf(id);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast('Removed from wishlist', 'info');
+            } else {
+                wishlist.push(id);
+                showToast('Added to wishlist!', 'success');
+            }
+            document.getElementById('wishlistCount').innerText = wishlist.length;
+            renderProducts();
+        }
+
+        // Add to Cart
+        function addToCart(id) {
+            const item = cart.find(i => i.id === id);
+            const product = products.find(p => p.id === id);
+
+            if (item) {
+                if (item.quantity < product.stock) {
+                    item.quantity++;
+                    showToast(`Updated quantity for ${product.name}`, 'success');
+                } else {
+                    showToast(`Stock limit reached for ${product.name}`, 'warning');
+                }
+            } else {
+                cart.push({ id, quantity: 1 });
+                showToast(`Added ${product.name} to cart`, 'success');
+            }
+            updateCartUI();
+        }
+
+        // Update Quantity in Cart
+        function updateQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            const product = products.find(p => p.id === id);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.id !== id);
+                showToast(`Removed ${product.name} from cart`, 'info');
+            }
+            updateCartUI();
+        }
+
+        // Remove item from Cart
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+            showToast('Item removed from cart', 'info');
+        }
+
+        // Update Cart Drawer UI & Calculations
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cartItemsContainer');
+            const cartCountBadge = document.getElementById('cartCount');
+            
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountBadge.innerText = totalCount;
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-cart-flatbed text-4xl mb-3"></i>
+                        <p class="text-sm font-medium">Your shopping cart is empty</p>
+                        <button onclick="toggleCartDrawer()" class="mt-4 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+                            Start Shopping
+                        </button>
+                    </div>
+                `;
+                document.getElementById('cartSubtotal').innerText = 'PKR 0';
+                document.getElementById('cartTotal').innerText = 'PKR 0';
+                document.getElementById('checkoutBtn').disabled = true;
+                document.getElementById('checkoutBtn').classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            document.getElementById('checkoutBtn').disabled = false;
+            document.getElementById('checkoutBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+
+            let subtotal = 0;
+
+            cartContainer.innerHTML = cart.map(item => {
+                const product = products.find(p => p.id === item.id);
+                const itemTotal = product.pricePKR * item.quantity;
+                subtotal += itemTotal;
+
+                return `
+                    <div class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <img src="${product.image}" class="w-16 h-16 object-cover rounded-lg bg-white border border-slate-200"
+                             onerror="this.src='https://placehold.co/100x100/0f172a/ffffff?text=Item'">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-slate-900 truncate">${product.name}</h4>
+                            <div class="text-xs text-sky-600 font-semibold mt-0.5">${formatPKR(product.pricePKR)}</div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center hover:bg-slate-300">-</button>
+                                <span class="text-xs font-bold w-4 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center hover:bg-slate-300">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-rose-500 text-xs mb-2">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <div class="text-xs font-bold text-slate-900">${formatPKR(itemTotal)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cartSubtotal').innerText = formatPKR(subtotal);
+            document.getElementById('cartTotal').innerText = formatPKR(subtotal);
+        }
+
+        // Toggle Drawer Visibility
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Open Product Details Modal
+        function openProductModal(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const content = document.getElementById('productModalContent');
+            content.innerHTML = `
+                <button onclick="closeProductModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 z-10">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="rounded-xl overflow-hidden bg-slate-100 max-h-80">
+                        <img src="${product.image}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=${encodeURIComponent(product.name)}'">
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-sky-600 uppercase tracking-widest">${product.category}</span>
+                        <h2 class="text-xl font-extrabold text-slate-900 mt-1 leading-tight">${product.name}</h2>
+                        <div class="flex items-center gap-2 my-2 text-xs">
+                            <span class="text-amber-500 font-bold"><i class="fa-solid fa-star mr-1"></i>${product.rating}</span>
+                            <span class="text-slate-400">(${product.reviews} customer reviews)</span>
+                        </div>
+                        <p class="text-xs text-slate-600 my-4 leading-relaxed">${product.description}</p>
+                        
+                        <div class="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <div class="text-2xl font-black text-slate-900">${formatPKR(product.pricePKR)}</div>
+                            <div class="text-xs text-slate-400">Approx. $${product.priceUSD.toLocaleString()} USD | Taxes included</div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button onclick="addToCart(${product.id}); closeProductModal(); toggleCartDrawer();" class="flex-1 py-3 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-sky-600/30 transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                Buy Now
+                            </button>
+                            <button onclick="toggleWishlist(${product.id})" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        // Close Product Details Modal
+        function closeProductModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        // Open Checkout Modal
+        function openCheckout() {
+            if (cart.length === 0) return;
+            const subtotal = cart.reduce((sum, i) => sum + (products.find(p => p.id === i.id).pricePKR * i.quantity), 0);
+            document.getElementById('checkoutTotalAmount').innerText = formatPKR(subtotal);
+            toggleCartDrawer();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        // Close Checkout Modal
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        // Handle Form Order Submission
+        function handlePlaceOrder(event) {
+            event.preventDefault();
+            cart = [];
+            updateCartUI();
+            closeCheckout();
+            showToast('Order Placed Successfully! Thank you for choosing PAK Store.', 'success');
+        }
+
+        // Toast Notification System
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = msg;
+            
+            if (type === 'warning') {
+                toastIcon.className = 'fa-solid fa-triangle-exclamation text-amber-400 text-lg';
+            } else if (type === 'info') {
+                toastIcon.className = 'fa-solid fa-circle-info text-sky-400 text-lg';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
